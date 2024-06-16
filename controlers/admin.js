@@ -69,7 +69,7 @@ const adminLogin = async (req, res) => {
         });
         res.status(200).json({
           status: "200",
-          message: "Login successful",
+          message: "Login successful with doctor count",
           logindata: adminPresent,
           token: token,
           totalDoctors: totalDoctors.length,
