@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 
 const doctorSchema = new mongoose.Schema(
   {
@@ -16,8 +15,9 @@ const doctorSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    specialization: {
+    department: {
       type: String,
+      ref: "Department", // Reference to the Department model
       required: true,
     },
     gender: {
