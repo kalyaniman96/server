@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const patientSchema = new mongoose.Schema(
   {
-    patientName: {
+    name: {
       type: String,
       required: true,
     },
@@ -16,41 +16,21 @@ const patientSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    dateOfBirth: {
-      type: Date,
-      required: false,
-    },
     gender: {
       type: String,
-      required: false,
-    },
-    address: {
-      type: String,
-      required: false,
-    },
-    city: {
-      type: String,
-      required: false,
-    },
-    state: {
-      type: String,
-      required: false,
-    },
-    zipCode: {
-      type: String,
-      required: false,
+      required: true,
     },
     medicalHistory: {
       type: String,
-      required: false,
+      required: true,
     },
     currentMedications: {
       type: String,
-      required: false,
+      required: true,
     },
-    allergies: {
+    department: {
       type: String,
-      required: false,
+      required: true,
     },
     emergencyContactName: {
       type: String,
@@ -58,7 +38,7 @@ const patientSchema = new mongoose.Schema(
     },
     emergencyContactPhone: {
       type: String,
-      required: false,
+      required: true,
     },
     emergencyContactRelation: {
       type: String,

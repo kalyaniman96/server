@@ -1,48 +1,52 @@
 const express = require("express");
-const Doctor = require("../models/doctorSchema");
+const Patient = require("../models/patientSchema");
 
 const app = express();
 app.use(express.json());
 
-const createDoctor = async (req, res) => {
+const createPatient = async (req, res) => {
   try {
-    console.log("+++ allData", req.body);
+    console.log("+++ All patient data: ", req.body);
 
-    const newDocument = new Doctor({
+    const newDocument = new Patient({
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
-      department: req.body.department,
       gender: req.body.gender,
-      qualification: req.body.qualification,
-      experience: req.body.experience,
-      hospitalAffiliation: req.body.hospitalAffiliation,
-      licenseNumber: req.body.licenseNumber,
-      address: req.body.address,
+      medicalHistory: req.body.medicalHistory,
+      currentMedications: req.body.currentMedications,
+      department: req.body.department,
+      emergencyContactName: req.body.emergencyContactName,
+      emergencyContactPhone: req.body.emergencyContactPhone,
+      emergencyContactRelation: req.body.emergencyContactRelation,
     });
+
     const dataInserted = await newDocument.save();
-    console.log("+++ API response: ", dataInserted);
+    console.log("+++ Patient data created ? ", dataInserted);
+
     if (dataInserted) {
       res.status(200).json({
         status: "200",
         message: "Data Inserted successfully",
-        fulldata: dataInserted,
+        patientData: dataInserted,
       });
     }
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({
       status: "500",
-      error: err.message,
+      error: error.message,
     });
   }
 };
 
-const getDoctorData = async (req, res) => {
+const getAllPatient = async (req, res) => {
   try {
-    const data = await Doctor.find({ isDelete: "no" }).sort({ createdAt: -1 });
-    console.log("+++doctor data", data);
+    const patientData = await Patient.find({ isDelete: "no" }).sort({
+      createdAt: -1,
+    });
+    console.log("+++ Patient data: ", patientData);
 
-    if (!data) {
+    if (!patientData) {
       res.status(404).json({
         status: "404",
         message: "Data not found",
@@ -51,7 +55,7 @@ const getDoctorData = async (req, res) => {
       res.status(200).json({
         status: "200",
         message: "data found",
-        data: data,
+        data: patientData,
       });
     }
   } catch (error) {
@@ -62,13 +66,13 @@ const getDoctorData = async (req, res) => {
   }
 };
 
-const getDoctorById = async (req, res) => {
+const getPatientById = async (req, res) => {
   try {
     const id = req.params.id;
-    const data = await Doctor.findOne({ _id: id });
-    console.log(data);
+    const patientData = await Patient.findOne({ _id: id });
+    console.log(patientData);
 
-    if (!data) {
+    if (!patientData) {
       res.status(404).json({
         status: "404",
         message: "Data not found with the provided ID",
@@ -77,34 +81,38 @@ const getDoctorById = async (req, res) => {
       res.status(200).json({
         status: "200",
         message: "Data found",
-        data: data,
+        data: patientData,
       });
     }
-  } catch (err) {
+  } catch (error) {
     // Handle errors such as invalid ID format or database errors
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      status: "500",
+      message: error.message,
+    });
   }
 };
 
-const updateDoctor = async (req, res) => {
+const updatePatient = async (req, res) => {
   try {
     const updatedata = {
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
-      department: req.body.department,
       gender: req.body.gender,
-      qualification: req.body.qualification,
-      experience: req.body.experience,
-      hospitalAffiliation: req.body.hospitalAffiliation,
-      licenseNumber: req.body.licenseNumber,
-      address: req.body.address,
+      medicalHistory: req.body.medicalHistory,
+      currentMedications: req.body.currentMedications,
+      department: req.body.department,
+      emergencyContactName: req.body.emergencyContactName,
+      emergencyContactPhone: req.body.emergencyContactPhone,
+      emergencyContactRelation: req.body.emergencyContactRelation,
     };
 
-    await Doctor.updateOne({ _id: req.params.id }, { $set: updatedata });
+    await Patient.updateOne({ _id: req.params.id }, { $set: updatedata });
 
-    const updatedData = await Doctor.findOne({ _id: req.params.id });
+    const updatedData = await Patient.findOne({ _id: req.params.id });
     console.log("Data updated successfully");
+
     res.status(200).json({
       status: "200",
       message: "Data updated successfully",
@@ -118,10 +126,10 @@ const updateDoctor = async (req, res) => {
   }
 };
 
-const deleteDoctor = async (req, res) => {
+const deletePatient = async (req, res) => {
   try {
     const id = req.params.id;
-    const userPresent = await Doctor.findById(id);
+    const userPresent = await Patient.findById(id);
 
     if (!userPresent) {
       return res.status(404).json({
@@ -129,13 +137,13 @@ const deleteDoctor = async (req, res) => {
         message: "User not found !",
       });
     } else {
-      // await Doctor.findByIdAndDelete(id);
+      // await Patient.findByIdAndDelete(id);
 
-      let delDoctor = {
+      let deletePatient = {
         isDelete: "yes",
       };
 
-      await Doctor.updateOne({ _id: id }, { $set: delDoctor });
+      await Patient.updateOne({ _id: id }, { $set: deletePatient });
       return res.status(200).json({
         status: "200",
         message: "Data deleted successfully",
@@ -150,9 +158,9 @@ const deleteDoctor = async (req, res) => {
 };
 
 module.exports = {
-  createDoctor,
-  getDoctorData,
-  getDoctorById,
-  updateDoctor,
-  deleteDoctor,
+  createPatient,
+  getAllPatient,
+  getPatientById,
+  updatePatient,
+  deletePatient,
 };
