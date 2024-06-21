@@ -17,7 +17,7 @@ const createPatient = async (req, res) => {
       currentMedications: req.body.currentMedications,
       department: req.body.department,
       emergencyContactName: req.body.emergencyContactName,
-      emergencyContactPhone: req.body.emergencyContactPhone,
+      emergencyContactNumber: req.body.emergencyContactNumber,
       emergencyContactRelation: req.body.emergencyContactRelation,
     });
 
@@ -28,7 +28,7 @@ const createPatient = async (req, res) => {
       res.status(200).json({
         status: "200",
         message: "Data Inserted successfully",
-        patientData: dataInserted,
+        data: dataInserted,
       });
     }
   } catch (error) {
@@ -104,7 +104,7 @@ const updatePatient = async (req, res) => {
       currentMedications: req.body.currentMedications,
       department: req.body.department,
       emergencyContactName: req.body.emergencyContactName,
-      emergencyContactPhone: req.body.emergencyContactPhone,
+      emergencyContactNumber: req.body.emergencyContactNumber,
       emergencyContactRelation: req.body.emergencyContactRelation,
     };
 
