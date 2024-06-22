@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const Admin = require("../models/adminSchema");
 const Doctor = require("../models/doctorSchema");
+const Patient = require("../models/patientSchema");
 const nodemailer = require("nodemailer");
 const secret = process.env.SECRET;
 const user = process.env.user;
@@ -43,6 +44,7 @@ const adminLogin = async (req, res) => {
 
     let adminPresent = await Admin.findOne({ email: email });
     const totalDoctors = await Doctor.find({ isDelete: "no" });
+    const totalPatients = await Patient.find({ isDelete: "no" });
     console.log("+++ Admin data: ", adminPresent);
     console.log("+++ total doctors: ", totalDoctors.length);
     if (!adminPresent) {
@@ -73,6 +75,7 @@ const adminLogin = async (req, res) => {
           logindata: adminPresent,
           token: token,
           totalDoctors: totalDoctors.length,
+          totalPatients: totalPatients.length,
         });
       }
     }
