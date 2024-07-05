@@ -7,6 +7,7 @@ const conn = require("./DB/db");
 const adminRoute = require("./routes/adminRoute");
 const doctorRoute = require("./routes/doctorRoute");
 const patientRoute = require("./routes/patientRoute");
+const departmentRoute = require("./routes/departmentRoute");
 
 const port = process.env.SERVER_PORT || 3002;
 
@@ -30,3 +31,4 @@ app.listen(port, () => {
 app.use("/admin", adminRoute);
 app.use("/doctor", doctorRoute);
 app.use("/patient", patientRoute);
+app.use("/department", departmentRoute);

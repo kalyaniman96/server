@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 
+const Schema = mongoose.Schema,
+  ObjectId = Schema.ObjectId;
+
 const departmentSchema = new mongoose.Schema(
   {
     name: {
@@ -7,19 +10,14 @@ const departmentSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    head: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctor",
-      required: true,
-    },
-    doctors: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Doctor",
-      },
-    ],
     description: {
       type: String,
+      required: false,
+    },
+
+    isDelete: {
+      type: String,
+      default: "no",
     },
   },
   { timestamps: true }

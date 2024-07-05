@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const Admin = require("../models/adminSchema");
 const Doctor = require("../models/doctorSchema");
 const Patient = require("../models/patientSchema");
+const Department = require("../models/departmentSchema");
 const nodemailer = require("nodemailer");
 const secret = process.env.SECRET;
 const user = process.env.user;
@@ -43,10 +44,9 @@ const adminLogin = async (req, res) => {
     const password = req.body.password;
 
     let adminPresent = await Admin.findOne({ email: email });
-    const totalDoctors = await Doctor.find({ isDelete: "no" });
-    const totalPatients = await Patient.find({ isDelete: "no" });
+
     console.log("+++ Admin data: ", adminPresent);
-    console.log("+++ total doctors: ", totalDoctors.length);
+
     if (!adminPresent) {
       return res.status(401).json({
         status: "401",
@@ -74,8 +74,6 @@ const adminLogin = async (req, res) => {
           message: "Login successful",
           logindata: adminPresent,
           token: token,
-          totalDoctors: totalDoctors.length,
-          totalPatients: totalPatients.length,
         });
       }
     }
@@ -238,6 +236,8 @@ const getAdminData = async (req, res) => {
     const id = req.params.id;
     let data = await Admin.findOne({ _id: id });
     const totalDoctors = await Doctor.find({ isDelete: "no" });
+    const totalPatients = await Patient.find({ isDelete: "no" });
+    const totalDepartments = await Department.find({ isDelete: "no" });
 
     console.log("+++admin data", data);
 
@@ -250,8 +250,10 @@ const getAdminData = async (req, res) => {
       res.status(200).json({
         status: "200",
         message: "user found",
-        totalDoctors: totalDoctors.length,
         userData: data,
+        totalDoctors: totalDoctors.length,
+        totalDepartments: totalDepartments.length,
+        allPatients: totalPatients,
       });
     }
   } catch (error) {
