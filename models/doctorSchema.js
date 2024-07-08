@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema,
-  ObjectId = Schema.ObjectId;
+const departmentSchema = require("./departmentSchema");
+const Schema = mongoose.Schema;
+
 const doctorSchema = new mongoose.Schema(
   {
     name: {
@@ -17,8 +18,9 @@ const doctorSchema = new mongoose.Schema(
       required: true,
     },
     department: {
+      type: Schema.Types.ObjectId,
+      ref: departmentSchema, // Reference to the Department model
       type: String,
-      ref: "Department", // Reference to the Department model
       required: true,
     },
     gender: {
