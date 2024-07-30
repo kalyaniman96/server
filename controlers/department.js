@@ -26,6 +26,11 @@ const createDepartment = async (req, res) => {
         message: "Data Inserted successfully",
         data: dataInserted,
       });
+    } else {
+      res.status(404).json({
+        status: "404",
+        message: "No data found",
+      });
     }
   } catch (error) {
     res.status(500).json({
@@ -101,6 +106,73 @@ const getDepartmentById = async (req, res) => {
   }
 };
 
+const getDoctorsByDepartmentName = async (req, res) => {
+  try {
+    const departmentName = req.params.name;
+
+    const doctorsByDepartment = await Doctor.find({
+      isDelete: "no",
+      department: new RegExp(`^${departmentName}$`, "i"),
+    });
+    // ^: Asserts the position at the start of the string.
+    // ${departmentData.name}: Inserts the department name dynamically.
+    // $: Asserts the position at the end of the string.
+    // 'i': Makes the regular expression case-insensitive.
+
+    if (!doctorsByDepartment) {
+      res.status(404).json({
+        status: "404",
+        message: "No doctor found in the department",
+      });
+    } else {
+      res.status(200).json({
+        status: "200",
+        message: "Data found",
+        doctors: doctorsByDepartment,
+      });
+    }
+  } catch (error) {
+    // Handle errors such as invalid ID format or database errors
+    res.status(500).json({
+      status: "500",
+      message: error.message,
+    });
+  }
+};
+
+const getPatientsByDepartmentName = async (req, res) => {
+  try {
+    const departmentName = req.params.name;
+
+    const patientsByDepartment = await Patient.find({
+      department: new RegExp(`^${departmentName}$`, "i"),
+    });
+    // ^: Asserts the position at the start of the string.
+    // ${departmentData.name}: Inserts the department name dynamically.
+    // $: Asserts the position at the end of the string.
+    // 'i': Makes the regular expression case-insensitive.
+
+    if (!patientsByDepartment) {
+      res.status(404).json({
+        status: "404",
+        message: "No patient found in the department",
+      });
+    } else {
+      res.status(200).json({
+        status: "200",
+        message: "Data found",
+        patients: patientsByDepartment,
+      });
+    }
+  } catch (error) {
+    // Handle errors such as invalid ID format or database errors
+    res.status(500).json({
+      status: "500",
+      message: error.message,
+    });
+  }
+};
+
 const updateDepartment = async (req, res) => {
   try {
     const updatedata = {
@@ -115,11 +187,18 @@ const updateDepartment = async (req, res) => {
     const updatedData = await Department.findOne({ _id: req.params.id });
     console.log("Data updated successfully");
 
-    res.status(200).json({
-      status: "200",
-      message: "Data updated successfully",
-      updatedData: updatedData,
-    });
+    if (updatedData) {
+      res.status(200).json({
+        status: "200",
+        message: "Data updated successfully",
+        updatedData: updatedData,
+      });
+    } else {
+      res.status(404).json({
+        status: "404",
+        message: "Data could not be updated",
+      });
+    }
   } catch (err) {
     res.status(500).json({
       status: 500,
@@ -163,6 +242,8 @@ module.exports = {
   createDepartment,
   getAllDepartments,
   getDepartmentById,
+  getDoctorsByDepartmentName,
+  getPatientsByDepartmentName,
   updateDepartment,
   deleteDepartment,
 };

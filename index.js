@@ -8,6 +8,7 @@ const adminRoute = require("./routes/adminRoute");
 const doctorRoute = require("./routes/doctorRoute");
 const patientRoute = require("./routes/patientRoute");
 const departmentRoute = require("./routes/departmentRoute");
+const appointmentRoute = require("./routes/appointmentRoute");
 
 const port = process.env.SERVER_PORT || 3002;
 
@@ -32,3 +33,4 @@ app.use("/admin", adminRoute);
 app.use("/doctor", doctorRoute);
 app.use("/patient", patientRoute);
 app.use("/department", departmentRoute);
+app.use("/appointment", appointmentRoute);

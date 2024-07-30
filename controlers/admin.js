@@ -6,6 +6,7 @@ const Admin = require("../models/adminSchema");
 const Doctor = require("../models/doctorSchema");
 const Patient = require("../models/patientSchema");
 const Department = require("../models/departmentSchema");
+const Appointment = require("../models/appointmentSchema");
 const nodemailer = require("nodemailer");
 const secret = process.env.SECRET;
 const user = process.env.user;
@@ -238,6 +239,7 @@ const getAdminData = async (req, res) => {
     const totalDoctors = await Doctor.find({ isDelete: "no" });
     const totalPatients = await Patient.find({ isDelete: "no" });
     const totalDepartments = await Department.find({ isDelete: "no" });
+    const totalAppointments = await Appointment.find({ isDelete: "no" });
 
     console.log("+++admin data", data);
 
@@ -254,6 +256,8 @@ const getAdminData = async (req, res) => {
         totalDoctors: totalDoctors.length,
         totalDepartments: totalDepartments.length,
         allPatients: totalPatients,
+        totalAppointments: totalAppointments.length,
+        appointmentsData: totalAppointments,
       });
     }
   } catch (error) {
