@@ -1,5 +1,10 @@
 const express = require("express");
 const Appointment = require("../models/appointmentSchema");
+const Doctor = require("../models/doctorSchema");
+const Patient = require("../models/patientSchema");
+const nodemailer = require("nodemailer");
+const user = process.env.user;
+const password = process.env.pass;
 
 const app = express();
 app.use(express.json());
@@ -17,11 +22,50 @@ const createAppointment = async (req, res) => {
     console.log("+++ New appointment data: ", newData);
 
     if (newData) {
-      res.status(200).json({
-        status: "200",
-        message: "New appointment created successfully",
-        data: newData,
+      // find the doctor & patient to whom email to be sent
+      const doctor = await Doctor.findOne({ name: newData.doctor });
+      const patient = await Patient.findOne({ name: newData.patient });
+      // Create email transporter
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        from: "morekilometersmorefun@gmail.com",
+        auth: {
+          user: user,
+          pass: password,
+        },
+        tls: {
+          rejectUnauthorized: false,
+        },
       });
+
+      // Compose email for doctor
+      const mailToDoctor = {
+        from: "morekilometersmorefun@gmail.com",
+        to: doctor.email,
+        subject: "New appointment alert",
+        text: `Dear sir ${doctor.name} , you have an appointment with Mr/Ms ${patient.name} on ${newData.date}`,
+      };
+      // Compose email for patient
+      const mailToPatient = {
+        from: "morekilometersmorefun@gmail.com",
+        to: patient.email,
+        subject: "New appointment alert",
+        text: `Dear Mr/Ms ${patient.name} , you have an appointment with Dr ${doctor.name} on ${newData.date}`,
+      };
+      // Send emails using Promise.all for concurrent sending
+      await Promise.all([
+        transporter.sendMail(mailToDoctor),
+        transporter.sendMail(mailToPatient),
+      ])
+        .then(() => {
+          res.status(200).json({
+            status: "200",
+            message: "New appointment created successfully",
+            data: newData,
+          });
+        })
+        .catch((error) => console.error("Error sending emails:", error));
     } else {
       res.status(404).json({
         status: "404",
